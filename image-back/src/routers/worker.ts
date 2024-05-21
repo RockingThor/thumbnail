@@ -9,11 +9,13 @@ const workerRouter = Router();
 
 workerRouter.post("/signin", async (req, res) => {
     try {
-        const walletAddress = "GLvVMs13Zxyorf5xHMHKwZAiG5NqMbH7XvFTL8E2yTME";
+        const walletAddress =
+            req.body.wallet || "GLvVMs13Zxyorf5xHMHKwZAiG5NqMbH7XvFTL8E2yTNF";
+        const telegram = req.body.telegram;
 
         const user = await prismaClient.worker.findFirst({
             where: {
-                address: walletAddress,
+                telegram,
             },
         });
 
@@ -29,6 +31,7 @@ workerRouter.post("/signin", async (req, res) => {
                     address: walletAddress,
                     pending_amount: 0,
                     locked_amount: 0,
+                    telegram,
                 },
             });
             const token = jwt.sign(
@@ -49,7 +52,7 @@ workerRouter.get("/nextTask", authMiddleWareWorker, async (req, res) => {
     const tasks = await getNextTask(Number(userId));
 
     if (!tasks) {
-        return res.status(411).json("No more tasks for you.");
+        return res.status(200).json("No more tasks for you.");
     } else {
         return res.status(200).json({ tasks });
     }
@@ -74,7 +77,7 @@ workerRouter.post("/submission", authMiddleWareWorker, async (req, res) => {
             .json({ message: "You are not allowed to submit for this task" });
     }
 
-    const amount: number = Number(task.amount) / task.sampleSize;
+    const amount: number = (Number(task.amount) * 1000000000) / task.sampleSize;
 
     const transactionResponse = await prismaClient.$transaction(async (tx) => {
         const response = await tx.submission.create({
@@ -150,6 +153,7 @@ workerRouter.get("/balance", authMiddleWareWorker, async (req, res) => {
         return res.status(200).json({
             pending_balance: worker.pending_amount,
             locked_amount: worker.locked_amount,
+            balance: worker.pending_amount + worker.locked_amount,
         });
     }
 });

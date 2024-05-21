@@ -104,25 +104,31 @@ userRouter.post("/task", authMiddleWare, async (req, res) => {
             .json({ message: "You have sent data in wrong format" });
     }
 
-    const transactionResponse = await prismaClient.$transaction(async (tx) => {
-        const response = await tx.task.create({
-            data: {
-                title: parsedData.data.title || DEFAULT_TITLE,
-                amount: "1",
-                signature: parsedData.data.signature,
-                user_id: userId,
-                sampleSize: Number(parsedData.data.sampleSize),
-                submissionCount: 0,
-            },
-        });
-        await tx.option.createMany({
-            data: parsedData.data.options.map((x) => ({
-                image_url: x.imageUrl,
-                task_id: response.id,
-            })),
-        });
-        return response;
-    });
+    const transactionResponse = await prismaClient.$transaction(
+        async (tx) => {
+            const response = await tx.task.create({
+                data: {
+                    title: parsedData.data.title || DEFAULT_TITLE,
+                    amount: "1",
+                    signature: parsedData.data.signature,
+                    user_id: userId,
+                    sampleSize: Number(parsedData.data.sampleSize),
+                    submissionCount: 0,
+                },
+            });
+            await tx.option.createMany({
+                data: parsedData.data.options.map((x) => ({
+                    image_url: x.imageUrl,
+                    task_id: response.id,
+                })),
+            });
+            return response;
+        },
+        {
+            maxWait: 5000, // default: 2000
+            timeout: 10000, // default: 5000
+        }
+    );
 
     res.json({ id: transactionResponse.id });
 });

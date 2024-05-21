@@ -29,7 +29,7 @@ export function authMiddleWare(
     }
 }
 
-export function authMiddleWareWorker(
+export async function authMiddleWareWorker(
     req: Request,
     res: Response,
     next: NextFunction
@@ -39,7 +39,6 @@ export function authMiddleWareWorker(
     if (!authHeader) {
         return res.status(403).json({ message: "The user is not signed in" });
     }
-
     try {
         const decoded = jwt.verify(
             authHeader,
