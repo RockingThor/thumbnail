@@ -19,7 +19,7 @@ export function Me() {
 
     async function getWorkerToken() {
         const response = await axios.post(`${BACKEND_URL}/signin`, {
-            telegram: "helloji",
+            telegram: "oyerohit",
         });
         if (response.data.token) {
             localStorage.setItem("token", response.data.token);

@@ -168,14 +168,16 @@ const UploadDialog = () => {
                 </div>
                 {images.length === numImages && (
                     <div className="flex items-center justify-between ">
-                        <div className=" p-1">
-                            <Button
-                                onClick={handleUpload}
-                                disabled={disabled}
-                            >
-                                Pay {solanaAmount / 1000000000} SOL
-                            </Button>
-                        </div>
+                        {signature.length <= 1 && (
+                            <div className=" p-1">
+                                <Button
+                                    onClick={makePayment}
+                                    disabled={disabled}
+                                >
+                                    Pay {solanaAmount / 1000000000} SOL
+                                </Button>
+                            </div>
+                        )}
                         {signature.length >= 1 && (
                             <div className=" p-1">
                                 <Button

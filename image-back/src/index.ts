@@ -12,7 +12,7 @@ app.use(express.json());
 app.use("/v1/users", userRouter);
 app.use("/v1/workers", workerRouter);
 
-app.listen(3000, () => {
+app.listen(3010, () => {
     console.log("App is running on PORT 3000");
 });
 

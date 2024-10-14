@@ -15,13 +15,15 @@ import axios from "axios";
 import { BACKEND_URL } from "@/lib/config";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/recoil/atom";
+import { useRouter } from "next/navigation";
 
 const AppBar = () => {
     const { publicKey, signMessage } = useWallet();
     const [tokenstate, setTokenState] = useRecoilState(tokenState);
+    const router = useRouter();
 
     async function getTokenFromBackend() {
-        if (!publicKey) return;
+        //if (!publicKey) return;
         const message = new TextEncoder().encode(
             "Jaldi se Jaldi Permission dedo sirf jaldi se jaldi permission dedo sir"
         );
@@ -36,13 +38,19 @@ const AppBar = () => {
     }
 
     useEffect(() => {
+        //if (publicKey) return;
         getTokenFromBackend();
     }, [publicKey]);
 
     return (
         <nav className="bg-blue-500 p-4">
             <div className="container mx-auto flex justify-between items-center">
-                <div className="text-white text-2xl font-bold font-mono">
+                <div
+                    className="text-white text-2xl font-bold font-mono"
+                    onClick={() => {
+                        router.push("/");
+                    }}
+                >
                     OpenPolls
                 </div>
                 <div className="hidden md:flex space-x-4">

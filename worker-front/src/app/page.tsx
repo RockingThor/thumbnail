@@ -8,6 +8,8 @@ import { noTaskState, taskState, tokenState } from "@/recoil/atom";
 import { Task } from "@/lib/type";
 import { useState } from "react";
 import TakeVote from "@/components/takeVote";
+import { GiftIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const token = useRecoilValue(tokenState);
@@ -15,6 +17,7 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [showStart, setShowStart] = useState(true);
     const [noTask, setNoTask] = useRecoilState(noTaskState);
+    const router = useRouter();
 
     async function getNExtTask() {
         setShowStart(false);
@@ -43,6 +46,16 @@ export default function Home() {
                 <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
                     <code className="font-mono font-bold">OpenPolls🚀</code>
                 </p>
+                <div className="relative">
+                    <div
+                        className="absolute mt-7 items-center justify-start m-2 cursor-pointer"
+                        onClick={() => {
+                            router.push("/payout");
+                        }}
+                    >
+                        <GiftIcon />
+                    </div>
+                </div>
             </div>
 
             <div className="">

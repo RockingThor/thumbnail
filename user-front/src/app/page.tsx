@@ -35,6 +35,7 @@ import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 import React, { FC, useCallback } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "@/lib/config";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const form = useForm<z.infer<typeof initFormSchema>>({
@@ -48,6 +49,7 @@ export default function Home() {
     const [formStateData, setFormStateData] = useRecoilState(formState);
     const [disabled, setDisabled] = useState(false);
     const [solanaAmount, setSolanaAmount] = useRecoilState(solanaAmountState);
+    const router = useRouter();
 
     function onSubmit(values: z.infer<typeof initFormSchema>) {
         const formData: MyFormData = {
@@ -160,6 +162,13 @@ export default function Home() {
                     </Form>
                 </CardContent>
             </Card>
+            {localStorage.getItem("token") && (
+                <div className="mt-6">
+                    <Button onClick={() => router.push("/polls")}>
+                        Created Polls
+                    </Button>
+                </div>
+            )}
         </main>
     );
 }

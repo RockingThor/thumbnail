@@ -199,4 +199,17 @@ userRouter.get("/task", authMiddleWare, async (req, res) => {
     return res.status(200).json({ result, taskDetails: task });
 });
 
+userRouter.get("/polls", authMiddleWare, async (req, res) => {
+    //@ts-ignore
+    const userId = req.userId;
+
+    const tasks = await prismaClient.task.findMany({
+        where: {
+            user_id: Number(userId),
+        },
+    });
+
+    return res.status(200).json({ tasks });
+});
+
 export default userRouter;
